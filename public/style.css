@@ -1,0 +1,137 @@
+.margin-top-20 {
+	margin-top:20px;
+}
+.welcome {
+	padding-top: 10px;
+}
+.signup {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 8%;
+	font-family: 'Coustard', serif;
+	font-size: 1.5em;
+}
+.log {
+	margin-top: 15%;
+}
+.settings {
+	font-family: 'Coustard', serif;
+	font-size: .6em;
+	margin-left: auto;
+	margin-right: auto;
+	width: 75%;
+	text-align: left;
+	padding: 15px 10px;
+}
+.changes {
+	margin-top:5%;
+}
+#main {
+	margin-top:20px;
+}
+h1 {
+	font-family: 'Coustard', serif;
+}
+h2 {
+	font-family: 'Coustard', serif;
+}
+.dropdown-menu {
+	font-size: 1em;
+}
+.navbar-brand img {
+	width:45px;
+	margin-top: -10px;
+}
+
+.navbar-brand {
+	font-family: 'Share Tech', sans-serif;
+	font-size: 1.5em;
+	color: #F5F5F5 !important;
+}
+.navbar {
+	font-family: 'Share Tech', sans-serif;
+	font-size: 1.5em;
+}
+.center {
+	max-width: 50%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Coustard', serif;
+	font-size: 2em;
+	background-color: #FFFAF5;
+	padding: 20px;
+	border: 1px solid #999;
+	border-radius: 5px;
+	margin-top: 10%;
+}
+.set {
+	margin-top: 5%;
+}
+.blogs {
+	max-width: 80%;
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: 'Coustard', serif;
+	font-size: 2em;
+	background-color: #FFFAF5;
+	padding: 10px 20px;
+	border: 3px solid #999;
+	border-radius: 15px;
+	margin-top: 5%;
+	margin-bottom: 5%;
+}
+.blog-posts {
+	background-color: white;
+	padding: 15px;
+	border: 1px solid #999;
+	border-radius: 5px;
+}
+.glyphicon-ok {
+	color: #00CCA3;
+}
+.glyphicon-user {
+	padding-right:10px;
+	color: black;
+}
+.task {
+	color: #CC2900;
+}
+.breadcrumb {
+	background-color: #F8F8F8;
+	margin-top: 20px;
+}
+#post {
+	background-color: #CC2900;
+	color: white;
+}
+#post:hover {
+	background-color: #B22400;
+}
+.login {
+	background-color: #00CCA3;
+}
+.login:hover {
+	background-color: #00997A;
+}
+.middle {
+	max-width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	font-family: 'Coustard', serif;
+	font-size: 1.5em;
+}
+.contact {
+	padding: 20px 5px;
+	border-radius:10px;
+	border:1px solid black;
+}
+.footer {
+	padding-top: 5px;
+	margin-top:5px;
+	text-align: center;
+	font-size: .8em;
+}
