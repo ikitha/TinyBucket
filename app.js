@@ -76,12 +76,17 @@ app.get("/new", function(req, res) {
 });
 
 app.get("/home", function(req, res) {
+    var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-        res.render('home.ejs', {
-        isAuthenticated: req.isAuthenticated(),
-        currentUser: req.user.id
-    });
-        models.Task.getRandomTask(currentUser);
+
+        models.Task.getRandomTask(currentUser)
+            .then(function(task) {
+                res.render('home.ejs', {
+                    isAuthenticated: req.isAuthenticated(),
+                    currentUser: currentUser,
+                    task: task
+                });
+            });
     } else {
         res.redirect("/new");
     }

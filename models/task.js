@@ -1,5 +1,7 @@
 "use strict";
 
+var Promise = require('bluebird/js/main/promise')();
+
 module.exports = function(sequelize, DataTypes) {
   var Task = sequelize.define("Task", {
     title: DataTypes.STRING
@@ -20,24 +22,27 @@ module.exports = function(sequelize, DataTypes) {
         });
       },
       getRandomTask: function(currentUser) {
+        var models = require('./index'),
+            whereClause = {},
+            randomTask;
+            // get a random task
             //find user id thats logged in
             //find them in the userstasks table
             //compare to task.id
             //if no match, show, if not, pick new random number
-        Task.findAll().then(function(taskIds){
-         var oneTask = Math.floor(Math.random() * taskIds.length)
-       }).then(function(task) {
-            models.Users.find({ where: {id: currentUser}})
-            .then(function(error, user) {
-              user.getTasks().then(function(err, alltasks) {
-                alltasks.forEach(function(task) {
-                  if (task !== oneTask.id) {
-                    console.log("it worked!");
-                  }
-                })
-              })
-            })
-        })
+        return models.UsersTasks.findAll({ where: {UserId: currentUser}, attributes: ['TaskId']})
+          .then(function(userstasks) {
+            console.log("This is: ", userstasks);
+            if (userstasks.length){
+              whereClause = {where: ['id not in (?)', userstasks] };
+            }
+            return models.Task.findAll(whereClause);
+          })
+          .then(function(tasks) {
+            return new Promise(function(resolve, reject) {
+              resolve(tasks[Math.floor(Math.random() * tasks.length)].values);
+            });
+          })
       }
     }
   });
