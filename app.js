@@ -77,7 +77,11 @@ app.get("/new", function(req, res) {
 
 app.get("/home", function(req, res) {
     if (req.isAuthenticated()) {
-        res.render('home.ejs');
+        res.render('home.ejs', {
+        isAuthenticated: req.isAuthenticated(),
+        currentUser: req.user.id
+    });
+        models.Task.getRandomTask(currentUser);
     } else {
         res.redirect("/new");
     }
