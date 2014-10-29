@@ -33,23 +33,15 @@
 		<h1>Take A Look Back!</h1>
 		<hr />
 	</div>
-
-<div class="blogs">
-	<h2 class="task">Task: <small>Strike up a conversation with the person that makes your coffee today.</small><span class="glyphicon glyphicon-ok pull-right"></span></h2>
-	<hr />
-	<blockquote class="blog-posts">
-  		<p>I tried to talk to my barista at starbucks today, but I feel like she mispelled my name on my cup just to tick me off, so I didn't get too in depth.</p>
-  		<footer>10/27/14</footer>
-	</blockquote>
-</div>
-
-<div class="blogs">
-	<h2 class="task">Task: <small>Give a food you hate a second chance.</small><span class="glyphicon glyphicon-ok pull-right"></span></h2>
-	<hr />
-	<blockquote class="blog-posts">
-  		<p>I always had a strong aversion to broccoli as a kid. Today I tried to pair it with my favorite pasta and sauce and it wasn't terrible!</p>
-  		<footer>10/26/14</footer>
-	</blockquote>
-</div>
+<% for (var i=0; i < currentUserTasks.length; i++) { %>
+  <div class="blogs">
+  	<h2 class="task">Task: <small><%= currentUserTasks[i].dataValues.Task.values.title %></small><span class="glyphicon glyphicon-ok pull-right"></span></h2>
+  	<hr />
+  	<blockquote class="blog-posts">
+    		<p><%= currentUserTasks[i].dataValues.post%></p>
+    		<footer><%= currentUserTasks[i].dataValues.updatedAt.toDateString() %></footer>
+  	</blockquote>
+  </div>
+<% } %>
 
 </div>

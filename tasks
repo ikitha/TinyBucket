@@ -1,0 +1,21 @@
+DELETE FROM "Tasks";
+
+SELECT setval('"Tasks_id_seq"', 1);
+
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Try to talk to a stranger on the way to work', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Strike up a conversation with the person that makes your coffee today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Give a food you hate a second chance today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('High five a random person on the street.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Drink an extra bottle of water today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Buy someone a drink today (alcoholic or not).', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Contact someone you''ve lost touch with.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Compliment someone today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Find something you like in every room you enter today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Take a different route somewhere today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Organize something (it can be small!).', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Take your toothbrush to work and brush your teeth after a meal.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Leave the house ten minutes early and take a stroll around the block.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Discuss a piece of art with someone.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Try a new food or cuisine today.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Set aside five minutes to stretch.', now(), now());
+INSERT INTO "Tasks" (title, "createdAt", "updatedAt") VALUES ('Listen to a song that makes you sad, then listen to one that makes you happy.', now(), now());

@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Task.hasMany(models.User, { through: 'UsersTasks' });
+        Task.hasOne(models.UsersTasks);
       },
       createNewTask: function(userTask, err, success) {
         Task.create({
@@ -41,10 +42,18 @@ module.exports = function(sequelize, DataTypes) {
             //if no match, show, if not, pick new random number
         return models.UsersTasks.findAll({ where: {UserId: currentUser}, attributes: ['TaskId']})
           .then(function(userstasks) {
-            console.log("This is: ", userstasks);
             if (userstasks.length){
-              whereClause = {where: ['id not in (?)', userstasks] };
+              whereClause = {
+                where: {
+                  id: {
+                    not: userstasks.map(
+                      function(task) { return task.dataValues.TaskId; }
+                    )
+                  }
+                }
+              };
             }
+            console.log(whereClause);
             return models.Task.findAll(whereClause);
           })
           .then(function(tasks) {

@@ -108,9 +108,12 @@ app.get("/about", function(req, res) {
 });
 
 app.get("/discover", function(req, res) {
+  models.Task.findAll().then(function(allTasks) {
     res.render('discover.ejs', {
-        isAuthenticated: req.isAuthenticated()
+        isAuthenticated: req.isAuthenticated(),
+        allTasks: allTasks
     });
+  });
 });
 
 app.get("/account/settings", function(req, res) {
@@ -122,8 +125,24 @@ app.get("/account/settings", function(req, res) {
 });
 
 app.get("/account/feed", function(req, res) {
+  var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-        res.render('feed.ejs');
+      models.UsersTasks.findAll({
+        where: {
+          'UserId' :currentUser
+        }, 
+        include: [ 
+          {
+            model: models.Task,
+            required: true
+          } 
+        ] 
+      }).then(function(currentUserTasks) {
+        res.render('feed.ejs', {
+          currentUserTasks: currentUserTasks
+        });
+        console.log(currentUserTasks);
+      });
     } else {
         res.redirect("/new");
     }
@@ -166,8 +185,25 @@ app.post("/new", function(req, res) {
 });
 
 app.post("/account/feed", function(req, res) {
-  
-})
+  var currentUser = req.user.id;
+  return models.UsersTasks.createCompletedTask({
+    userid: currentUser,
+    taskid: req.body.taskid,
+    post: req.body.post
+  }).then(function() {
+    return models.Task.getRandomTaskForUser(currentUser)
+  })
+  .then(function(task) {
+    return models.User.find(currentUser)
+    .then(function(user){
+      user.updateAttributes({
+      current_task_id: task.id
+      }).then(function() {
+        res.redirect("/account/feed");
+      });
+    });
+  });
+});
 
 app.post("/newtask", function(req, res) {
   models.Task.createNewTask({
