@@ -21,7 +21,16 @@ module.exports = function(sequelize, DataTypes) {
           }
         });
       },
-      getRandomTask: function(currentUser) {
+      getRandomTask: function() {
+        var models = require('./index');
+        return models.Task.findAll()
+          .then(function(tasks) {
+            return new Promise(function(resolve, reject) {
+              resolve(tasks[Math.floor(Math.random() * tasks.length)].values);
+            });            
+          });
+      },
+      getRandomTaskForUser: function(currentUser) {
         var models = require('./index'),
             whereClause = {},
             randomTask;

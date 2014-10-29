@@ -12,7 +12,8 @@ module.exports = function(sequelize, DataTypes) {
     last_name: DataTypes.STRING,
     username: DataTypes.STRING,
     password: DataTypes.STRING,
-    privacy: DataTypes.INTEGER
+    privacy: DataTypes.INTEGER,
+    current_task_id: DataTypes.INTEGER
   }, {
     classMethods: {
       associate: function(models) {
@@ -24,21 +25,22 @@ module.exports = function(sequelize, DataTypes) {
       comparePass: function(userpass, dbpass) {
         return bcrypt.compareSync(userpass, dbpass);
       },
-      createNewUser: function(userInfo, err, success) {
-        User.create({
+      createNewUser: function(userInfo) {
+        return User.create({
           first_name: userInfo.firstname,
           last_name: userInfo.lastname,
           username: userInfo.username,
           email: userInfo.email,
           password: User.hashPass(userInfo.password),
-          privacy: userInfo.privacy
-        }).done(function(error, user) {
-          if(error) {
-            err();
-          } else {
-            success();
-          }
+          privacy: userInfo.privacy,
+          current_task_id: userInfo.current_task_id
         });
+      }
+    },
+    instanceMethods: {
+      getCurrentTask: function() {
+        var models = require('./index');
+        return models.Task.find(this.current_task_id);
       }
     }
   });

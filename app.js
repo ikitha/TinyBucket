@@ -78,14 +78,24 @@ app.get("/new", function(req, res) {
 app.get("/home", function(req, res) {
     var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-        models.Task.getRandomTask(currentUser)
-            .then(function(task) {
+        models.User.find(currentUser).then(function(user) {
+            user.getCurrentTask().then(function(task) {
                 res.render('home.ejs', {
                     isAuthenticated: req.isAuthenticated(),
                     currentUser: currentUser,
                     task: task
                 });
             });
+        });
+
+        // models.Task.getRandomTask(currentUser)
+        //     .then(function(task) {
+        //         res.render('home.ejs', {
+        //             isAuthenticated: req.isAuthenticated(),
+        //             currentUser: currentUser,
+        //             task: task
+        //         });
+        //     });
     } else {
         res.redirect("/new");
     }
@@ -134,19 +144,30 @@ app.get("/newtask", function(req, res) {
 
 //POST ROUTES
 app.post("/new", function(req, res) {
-  models.User.createNewUser({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    username: req.body.username,
-    password: req.body.password,
-    privacy: 1
-  }, function() {
-    res.redirect("/signup");
-  }, function() {
+  models.Task.getRandomTask()
+  .then(function(task) {
+    console.log("found task", task);
+    return models.User.createNewUser({
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      privacy: 1,
+      current_task_id: task.id
+    })
+  })
+  .then(function() {
     res.redirect("/login");
+  })
+  .catch(function() {
+    res.redirect("/signup");
   });
 });
+
+app.post("/account/feed", function(req, res) {
+  
+})
 
 app.post("/newtask", function(req, res) {
   models.Task.createNewTask({
