@@ -78,7 +78,6 @@ app.get("/new", function(req, res) {
 app.get("/home", function(req, res) {
     var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-
         models.Task.getRandomTask(currentUser)
             .then(function(task) {
                 res.render('home.ejs', {
@@ -93,11 +92,15 @@ app.get("/home", function(req, res) {
 });
 
 app.get("/about", function(req, res) {
-    res.render('about.ejs');
+    res.render('about.ejs', {
+        isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/discover", function(req, res) {
-    res.render('discover.ejs');
+    res.render('discover.ejs', {
+        isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/account/settings", function(req, res) {
