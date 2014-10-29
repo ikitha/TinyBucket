@@ -3,7 +3,12 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
+    <% if(!isAuthenticated) { %>
       <a class="navbar-brand active" href="/new">
+    <% } %>
+    <% if(isAuthenticated) { %>
+      <a class="navbar-brand active" href="/home">
+    <% } %>
       <img src='https://clker.com/cliparts/T/U/r/H/U/S/pail-bucket-md.png'>
       TinyBucket</a>
     </div>
@@ -35,13 +40,13 @@
 	<hr />
 	<h4 class="search-tasks-message">Search tasks here to see how others responded to completing them!</h4>
   <div class="row">
-    <form method="post" action="/discover">
+    <form method="get" action="/discover/show">
       <div class="col-md-1"></div>
       <div class="col-md-9 anti-padding">
-	      <select type="text" class="form-control taskdropdown">
+	      <select name="selectTask" type="text" class="form-control taskdropdown">
           <option id="disabledSelect" value="">Select a task to search</option>
           <% for (var i = 0; i < allTasks.length; i++) { %>
-            <option value="allTasks[i].id"><%= allTasks[i].title %></option>
+            <option value="<%=allTasks[i].id%>"><%= allTasks[i].title %></option>
           <% } %>
         </select>
       </div>
@@ -51,34 +56,6 @@
       <div class="col-md-1"></div>
     </form>
   </div>
-</div>
-
-
-<div class="blogs">
-	<h2 class="task">Task: <small>Strike up a conversation with the person that makes your coffee today.</small><span class="glyphicon glyphicon-user pull-left"></span></h2>
-	<hr />
-	<blockquote class="blog-posts">
-  		<p>I tried to talk to my barista at starbucks today, but I feel like she mispelled my name on my cup just to tick me off, so I didn't get too in depth.</p>
-  		<footer>10/27/14</footer>
-	</blockquote>
-</div>
-
-<div class="blogs">
-	<h2 class="task">Task: <small>Strike up a conversation with the person that makes your coffee today.</small><span class="glyphicon glyphicon-user pull-left"></span></h2>
-	<hr />
-	<blockquote class="blog-posts">
-  		<p>I asked my barista what she did outside of work and she responded that she's studying optometry. I thought to myself, good for her, get out while you're young.</p>
-  		<footer>10/07/14</footer>
-	</blockquote>
-</div>
-
-<div class="blogs">
-	<h2 class="task">Task: <small>Strike up a conversation with the person that makes your coffee today.</small><span class="glyphicon glyphicon-user pull-left"></span></h2>
-	<hr />
-	<blockquote class="blog-posts">
-  		<p>My barista and I have the same name, although he spells it with an -ey, and I spell it with an -ie... although that is not what my coffee cup says.</p>
-  		<footer>09/10/14</footer>
-	</blockquote>
 </div>
 
 </div>

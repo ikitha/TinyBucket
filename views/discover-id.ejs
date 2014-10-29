@@ -16,6 +16,7 @@
       <ul class="nav navbar-nav">
         <li><a href="/about">About</a></li>
         <li><a href="/discover">Discover</a></li>
+        <% if(isAuthenticated) { %>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -24,26 +25,36 @@
           </ul>
         </li>
         <li><a href="/login" class="navbar-nav">Logout</a></li>
+        <% } %>
       </ul>
   </div>
 </nav>
 
 <div class="container main" style="margin-top:50px">
-
 	<ol class="breadcrumb">
-	  <li>Home</li>
+	  <li>Discover</li>
 	</ol>
 
-  <form role= "form" method="post" action="/account/feed">
-    <div class="center">
-    	<h1>Welcome, User!</h1>
-    	<p>Your task for today is: <small><%= task.title %></small></p>
-      <input type="hidden" name="taskid" value="<%= task.id%>"/>
-    	<textarea name="post" class="form-control" rows="3" placeholder="Write a short response to completing your task here!"></textarea>
-    	<div class="margin-top-20">
-    		<button id="post" type="submit" class="btn btn-default" href="/account/feed">Post to feed</button>
-    	</div>
-    </div>
-  </form>
+<div class="middle">
+	<h1>Discover and Share</h1>
+	<hr />
+	<h4 class="search-tasks-message">Search tasks here to see how others responded to completing them!</h4>
+  <div class="centering">
+    <a class="btn btn-default btn-lg centering" href="/discover">Go Back to Search</a>
+  </div>
+</div>
+
+<% for (var i=0; i < taskresults.length; i++) { %>
+  <div class="blogs">
+  	<h2 class="task">Task: <small><%= taskresults[i].dataValues.Task.values.title %></small><span class="glyphicon glyphicon-user pull-left"></span></h2>
+  	<hr />
+  	<blockquote class="blog-posts">
+    		<p><%= taskresults[i].dataValues.post %></p>
+    		<footer><%= taskresults[i].dataValues.updatedAt.toDateString() %></footer>
+  	</blockquote>
+  </div>
+<% } %>
+
+</div>
 
 </div>

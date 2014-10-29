@@ -64,15 +64,21 @@ passport.deserializeUser(function(id, done){
 
 //GET ROUTES
 app.get("/", function(req, res) {
-    res.redirect("/login");
+    res.redirect("/login", {
+      isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/login", function(req, res) {
-    res.render('login.ejs');
+    res.render('login.ejs', {
+      isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/new", function(req, res) {
-    res.render('signup.ejs');
+    res.render('signup.ejs', {
+      isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/home", function(req, res) {
@@ -117,10 +123,16 @@ app.get("/discover", function(req, res) {
 });
 
 app.get("/account/settings", function(req, res) {
+  var currentUser = req.user;
     if (req.isAuthenticated()) {
-        res.render('settings.ejs');
+        res.render('settings.ejs', {
+          isAuthenticated: req.isAuthenticated(),
+          currentUser: currentUser
+        });
     } else {
-        res.redirect("/new");
+        res.redirect("/new", {
+          isAuthenticated: req.isAuthenticated()
+        });
     }
 });
 
@@ -139,7 +151,8 @@ app.get("/account/feed", function(req, res) {
         ] 
       }).then(function(currentUserTasks) {
         res.render('feed.ejs', {
-          currentUserTasks: currentUserTasks
+          currentUserTasks: currentUserTasks,
+          isAuthenticated: req.isAuthenticated()
         });
         console.log(currentUserTasks);
       });
@@ -149,7 +162,9 @@ app.get("/account/feed", function(req, res) {
 });
 
 app.get("/contact", function(req, res) {
-    res.render('contact.ejs');
+    res.render('contact.ejs', {
+      isAuthenticated: req.isAuthenticated()
+    });
 });
 
 app.get("/logout", function(req, res) {
@@ -205,6 +220,28 @@ app.post("/account/feed", function(req, res) {
   });
 });
 
+app.get("/discover/show", function(req, res) {
+  console.log("this is query", req.query.selectTask);
+  return models.UsersTasks.findAll({
+    where: {
+      'TaskId': req.query.selectTask
+    }, 
+    include: [ 
+      {
+        model: models.Task,
+        required: true
+      } 
+    ] 
+  })
+  .then(function(taskresults) {
+    res.render('discover-id', {
+      taskresults: taskresults,
+      isAuthenticated: req.isAuthenticated()
+    });
+  });
+});
+
+
 app.post("/newtask", function(req, res) {
   models.Task.createNewTask({
     task: req.body.title
@@ -221,11 +258,35 @@ app.post("/login", passport.authenticate("local", {
   failureRedirect: "/login"
 }));
 
-//post for blog entry
-// app.post("/home", function(req, res) {
-//     models.UsersTasks.create({
+//put route to edit user info
+app.put("/account/user/:id", function(req, res) {
+  var currentUser = req.user.id;
+  if (currentUser == req.params.id) {
+    if (req.body.privacy) {
+      var privacyOption = 0;
+    } else {
+      var privacyOption = 1;
+    }
+    models.User.find(currentUser)
+    .then(function(user) {
+      user.updateAttributes({
+        first_name: req.body.firstname,
+        last_name: req.body.lastname,
+        username: req.body.username,
+        privacy: privacyOption
+      })
+      .then(function() {
+        res.redirect("/account/settings");
+      });
+    });
+  } else {
+    //404
+  }
+});
 
-//     })
-// })
+
+
+
+
 
 app.listen(process.env.PORT || 3000);
