@@ -6,7 +6,8 @@ var express = require('express'),
     // ejs-locals, for layouts
     engine = require('ejs-locals'),
     session = require('cookie-session'),
-    flash = require('connect-flash');
+    flash = require('connect-flash'),
+    Sequelize = require('sequelize');
 
 //passport and session requires
 var passport = require("passport"),
@@ -220,17 +221,42 @@ app.post("/account/feed", function(req, res) {
   });
 });
 
+// app.get("/discover/show", function(req, res) {
+//   return models.UsersTasks.findAll({
+//     where: {
+//       'TaskId': req.query.selectTask
+//     }, 
+//     include: [ 
+//       {
+//         model: models.Task,
+//         required: true
+//       } 
+//     ] 
+//   })
+//   .then(function(taskresults) {
+//     res.render('discover-id', {
+//       taskresults: taskresults,
+//       isAuthenticated: req.isAuthenticated()
+//     });
+//   });
+// });
+
 app.get("/discover/show", function(req, res) {
   console.log("this is query", req.query.selectTask);
   return models.UsersTasks.findAll({
-    where: {
-      'TaskId': req.query.selectTask
-    }, 
+    where: Sequelize.and(
+      {'TaskId': req.query.selectTask},
+      {'User.privacy': 1}
+    ), 
     include: [ 
       {
         model: models.Task,
         required: true
-      } 
+      },
+      {
+        model: models.User,
+        required: true
+      }  
     ] 
   })
   .then(function(taskresults) {
@@ -240,7 +266,6 @@ app.get("/discover/show", function(req, res) {
     });
   });
 });
-
 
 app.post("/newtask", function(req, res) {
   models.Task.createNewTask({

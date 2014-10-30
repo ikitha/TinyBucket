@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         UserTask.hasOne(models.User, { foreignKey: "id" });
+        UserTask.belongsTo(models.User);
         UserTask.belongsTo(models.Task);
       },
       createCompletedTask: function(userInfo) {
