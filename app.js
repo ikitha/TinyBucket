@@ -13,8 +13,9 @@ var express = require('express'),
 var passport = require("passport"),
     localStrategy = require("passport-local").Strategy;
 
-var mandrill = require('mandrill-api/mandrill');
-var mandrill_client = new mandrill.Mandrill();
+var mailer   = require("mailer")
+  , mandrillUserName = process.env.MANDRILL_USERNAME
+  , mandrillPassword = process.env.MANDRILL_APIKEY;
 
 app.set("view engine", "ejs");
 
@@ -298,42 +299,22 @@ app.put("/account/user/:id", function(req, res) {
 });
 
 app.post("/contact", function(req, res) {//handle contact page to send to my email
-  var message = {
-    "html": req.body.comment,
-    "subject": "Comments on TinyBucket",
-    "from_email": req.body.email,
-    "from_name": req.body.firstname + " " + req.body.lastname,
-    "to": [{
-            "email": process.env.MY_EMAIL,
-            "name": "TinyBucket",
-            "type": "to"
-        }],
-    "headers": {
-        "Reply-To": req.body.email
+  mailer.send(
+    { host:           "smtp.mandrillapp.com"
+    , port:           25
+    , to:             process.env.MY_EMAIL
+    , from:           req.body.email
+    , subject:        "Comments on TinyBucket"
+    , body:           req.body.comment
+    , authentication: "login"
+    , username:       mandrillUserName
+    , password:       mandrillPassword
+    }, function(err, result){
+      if(err){
+        console.log(err);
+      }
     }
-  };
-  var async = true;
-  var ip_pool = "Main Pool";
-  mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool}, function(result) {
-
-      /*
-      [{
-              "email": "recipient.email@example.com",
-              "status": "sent",
-              "reject_reason": "hard-bounce",
-              "_id": "abc123abc123abc123abc123abc123"
-          }]
-      */
-  }, function(e) {
-      // Mandrill returns the error as an object with name and message keys
-
-      // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-  });
+  );
 });
-
-
-
-
-
 
 app.listen(process.env.PORT || 3000);
