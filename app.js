@@ -13,9 +13,15 @@ var express = require('express'),
 var passport = require("passport"),
     localStrategy = require("passport-local").Strategy;
 
-var mailer   = require("mailer")
-  , mandrillUserName = process.env.MANDRILL_USERNAME
-  , mandrillPassword = process.env.MANDRILL_APIKEY;
+var nodemailer   = require("nodemailer")
+
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Mandrill",
+    auth: {
+        user: process.env.MANDRILL_USERNAME,
+        pass: process.env.MANDRILL_APIKEY
+    }
+});
 
 app.set("view engine", "ejs");
 
@@ -299,24 +305,37 @@ app.put("/account/user/:id", function(req, res) {
 });
 
 app.post("/contact", function(req, res) {//handle contact page to send to my email
-  mailer.send(
-    { host:           "smtp.mandrillapp.com"
-    , port:           587
-    , to:             process.env.MY_EMAIL
-    , from:           req.body.email
-    , subject:        "Comments on TinyBucket"
-    , body:           req.body.comment
-    , authentication: "plain"
-    , username:       mandrillUserName
-    , password:       mandrillPassword
-    }, function(err, result){
-      if(err){
-        console.log(err);
-      } else {
-        res.redirect('/discover');
+  smtpTransport.sendMail({
+      from: req.body.email,
+      to: process.env.MY_EMAIL,
+      subject: "Comments on TinyBucket",
+      html: req.body.comment
+  }, function(error, response){
+      if(error){
+          console.log(error);
+      }else{
+          res.redirect('/discover');
       }
-    }
-  );
+  });
+
+  // mailer.send(
+  //   { host:           "smtp.mandrillapp.com"
+  //   , port:           587
+  //   , to:             
+  //   , from:           
+  //   , subject:        
+  //   , body:           
+  //   , authentication: "plain"
+  //   , username:       mandrillUserName
+  //   , password:       mandrillPassword
+  //   }, function(err, result){
+  //     if(err){
+  //       console.log(err);
+  //     } else {
+  //       res.redirect('/discover');
+  //     }
+  //   }
+  // );
 });
 
 app.listen(process.env.PORT || 3000);
