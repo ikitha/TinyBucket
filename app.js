@@ -301,12 +301,12 @@ app.put("/account/user/:id", function(req, res) {
 app.post("/contact", function(req, res) {//handle contact page to send to my email
   mailer.send(
     { host:           "smtp.mandrillapp.com"
-    , port:           25
+    , port:           587
     , to:             process.env.MY_EMAIL
     , from:           req.body.email
     , subject:        "Comments on TinyBucket"
     , body:           req.body.comment
-    , authentication: "login"
+    , authentication: "plain"
     , username:       mandrillUserName
     , password:       mandrillPassword
     }, function(err, result){
