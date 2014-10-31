@@ -162,7 +162,6 @@ app.get("/account/feed", function(req, res) {
           currentUserTasks: currentUserTasks,
           isAuthenticated: req.isAuthenticated()
         });
-        console.log(currentUserTasks);
       });
     } else {
         res.redirect("/new");
@@ -286,9 +285,9 @@ app.post("/newtask", function(req, res) {
   models.Task.createNewTask({
     task: req.body.title
   }, function() {
-    console.log("something went wrong");
+    //console.log("something went wrong");
   }, function() {
-    console.log("created new task");
+    //console.log("created new task");
   });
 });
 
@@ -347,7 +346,7 @@ app.post("/contact", function(req, res) {
   var async = true;
   var ip_pool = "Main Pool";
   mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool}, function(result) {
-      console.log(result);
+
       /*
       [{
               "email": "recipient.email@example.com",
@@ -358,7 +357,7 @@ app.post("/contact", function(req, res) {
       */
   }, function(e) {
       // Mandrill returns the error as an object with name and message keys
-      console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+
       // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
   });
 })
