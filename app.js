@@ -312,6 +312,8 @@ app.post("/contact", function(req, res) {//handle contact page to send to my ema
     }, function(err, result){
       if(err){
         console.log(err);
+      } else {
+        res.redirect('/discover');
       }
     }
   );
