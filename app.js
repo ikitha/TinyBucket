@@ -73,43 +73,33 @@ app.get("/", function(req, res) {
 });
 
 app.get("/login", function(req, res) {
-
     res.render('login.ejs', {
       isAuthenticated: req.isAuthenticated(),
-      messages: req.flash('error')
+      messages: req.flash('error')//pass in flash error through passport
     });
 });
 
 app.get("/new", function(req, res) {
     res.render('signup.ejs', {
       isAuthenticated: req.isAuthenticated(),
-      messages: req.flash('info')
+      messages: req.flash('info')//pass in error from signup form
     });
 });
 
 app.get("/home", function(req, res) {
-    var currentUser = req.user.id;
+  var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-        models.User.find(currentUser).then(function(user) {
-            user.getCurrentTask().then(function(task) {
-                res.render('home.ejs', {
-                    isAuthenticated: req.isAuthenticated(),
-                    currentUser: currentUser,
-                    task: task
-                });
-            });
-        });
-
-        // models.Task.getRandomTask(currentUser)
-        //     .then(function(task) {
-        //         res.render('home.ejs', {
-        //             isAuthenticated: req.isAuthenticated(),
-        //             currentUser: currentUser,
-        //             task: task
-        //         });
-        //     });
+      models.User.find(currentUser).then(function(user) {//find current user if authenticated
+          user.getCurrentTask().then(function(task) {//get their current_task_id
+              res.render('home.ejs', {//render homepage and pass in task to plug into view
+                  isAuthenticated: req.isAuthenticated(),
+                  currentUser: currentUser,
+                  task: task
+              });
+          });
+      });
     } else {
-        res.redirect("/new");
+      res.redirect("/new");
     }
 });
 
@@ -121,7 +111,7 @@ app.get("/about", function(req, res) {
 });
 
 app.get("/discover", function(req, res) {
-  models.Task.findAll().then(function(allTasks) {
+  models.Task.findAll().then(function(allTasks) {//find all the tasks for the dropdown menu
     res.render('discover.ejs', {
         isAuthenticated: req.isAuthenticated(),
         allTasks: allTasks
@@ -131,22 +121,22 @@ app.get("/discover", function(req, res) {
 
 app.get("/account/settings", function(req, res) {
   var currentUser = req.user;
-    if (req.isAuthenticated()) {
-        res.render('settings.ejs', {
-          isAuthenticated: req.isAuthenticated(),
-          currentUser: currentUser
-        });
+    if (req.isAuthenticated()) {//only allow authenticated user to get to settings page
+      res.render('settings.ejs', {
+        isAuthenticated: req.isAuthenticated(),
+        currentUser: currentUser
+      });
     } else {
-        res.redirect("/new", {
-          isAuthenticated: req.isAuthenticated()
-        });
+      res.redirect("/new", {
+        isAuthenticated: req.isAuthenticated()
+      });
     }
 });
 
 app.get("/account/feed", function(req, res) {
   var currentUser = req.user.id;
     if (req.isAuthenticated()) {
-      models.UsersTasks.findAll({
+      models.UsersTasks.findAll({//find all the current user's tasks and include the task model to access task title
         where: {
           'UserId' :currentUser
         }, 
@@ -157,55 +147,55 @@ app.get("/account/feed", function(req, res) {
           } 
         ],
         order: [['updatedAt', 'DESC']]  
-      }).then(function(currentUserTasks) {
+      }).then(function(currentUserTasks) {//if promise is fufilled, send their tasks to their feed view
         res.render('feed.ejs', {
           currentUserTasks: currentUserTasks,
           isAuthenticated: req.isAuthenticated()
         });
       });
     } else {
-        res.redirect("/new");
+      res.redirect("/new");
     }
 });
 
 app.get("/contact", function(req, res) {
-    res.render('contact.ejs', {
-      isAuthenticated: req.isAuthenticated()
-    });
+  res.render('contact.ejs', {
+    isAuthenticated: req.isAuthenticated()
+  });
 });
 
 app.get("/logout", function(req, res) {
-  req.logout();
+  req.logout();//logout
   res.redirect("/login");
 });
 
 app.get("/newtask", function(req, res) {
-    res.render("createtask.ejs");
+    res.render("createtask.ejs");//this page is just for me right now!
 });
 
 app.get("/404", function(req, res) {
-  res.render('404.ejs');
+  res.render('404.ejs');//this page is just for me right now!!
 });
 
 //POST ROUTES
 app.post("/new", function(req, res) {
-  models.Task.getRandomTask()
+  models.Task.getRandomTask()//get a random task
   .then(function(task) {
-    console.log("found task", task);
-    return models.User.createNewUser({
+    //console.log("found task", task);
+    return models.User.createNewUser({//create a new user
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       email: req.body.email,
       username: req.body.username,
       password: req.body.password,
       privacy: 1,
-      current_task_id: task.id
+      current_task_id: task.id//assign the random task here
     })
   })
-  .then(function() {
+  .then(function() {//on success, redirect to login
     res.redirect("/login");
   })
-  .catch(function(error) {
+  .catch(function(error) {//catch the error and pass the error message to re-render same page and try again
     res.render("signup.ejs", {
       isAuthenticated: req.isAuthenticated(),
       messages: error.errors
@@ -215,16 +205,16 @@ app.post("/new", function(req, res) {
 
 app.post("/account/feed", function(req, res) {
   var currentUser = req.user.id;
-  return models.UsersTasks.createCompletedTask({
+  return models.UsersTasks.createCompletedTask({//create a completed task, or "post"
     userid: currentUser,
     taskid: req.body.taskid,
     post: req.body.post
-  }).then(function() {
+  }).then(function() {//then get a new random task that won't repeat tasks they have done before
     return models.Task.getRandomTaskForUser(currentUser)
   })
   .then(function(task) {
     return models.User.find(currentUser)
-    .then(function(user){
+    .then(function(user){//update the new task in the user table (current_task_id)
       user.updateAttributes({
       current_task_id: task.id
       }).then(function() {
@@ -234,54 +224,34 @@ app.post("/account/feed", function(req, res) {
   });
 });
 
-// app.get("/discover/show", function(req, res) {
-//   return models.UsersTasks.findAll({
-//     where: {
-//       'TaskId': req.query.selectTask
-//     }, 
-//     include: [ 
-//       {
-//         model: models.Task,
-//         required: true
-//       } 
-//     ] 
-//   })
-//   .then(function(taskresults) {
-//     res.render('discover-id', {
-//       taskresults: taskresults,
-//       isAuthenticated: req.isAuthenticated()
-//     });
-//   });
-// });
-
 app.get("/discover/show", function(req, res) {
-  console.log("this is query", req.query.selectTask);
-  return models.UsersTasks.findAll({
+  //console.log("this is query", req.query.selectTask);
+  return models.UsersTasks.findAll({//find all the tasks where the users are public and the task id is what is selected in the dropdown.
     where: Sequelize.and(
       {'TaskId': req.query.selectTask},
       {'User.privacy': 1}
     ), 
     include: [ 
       {
-        model: models.Task,
+        model: models.Task,//include task table for task title
         required: true
       },
       {
-        model: models.User,
+        model: models.User,//include user table for privacy status
         required: true
       }  
     ],
-    order: [['updatedAt', 'DESC']] 
+    order: [['updatedAt', 'DESC']] //order by newest at top
   })
   .then(function(taskresults) {
-    res.render('discover-id', {
+    res.render('discover-id', {//pass in results to view
       taskresults: taskresults,
       isAuthenticated: req.isAuthenticated()
     });
   });
 });
 
-app.post("/newtask", function(req, res) {
+app.post("/newtask", function(req, res) {//this is just for me!!
   models.Task.createNewTask({
     task: req.body.title
   }, function() {
@@ -292,7 +262,7 @@ app.post("/newtask", function(req, res) {
 });
 
 //post route for login handled through passport
-app.post("/login", passport.authenticate('local', {
+app.post("/login", passport.authenticate('local', {//if successful go home, otherwise go back to login and pass along error
     successRedirect: '/home',
     failureRedirect: '/login',
     failureFlash: {
@@ -305,30 +275,30 @@ app.post("/login", passport.authenticate('local', {
 //put route to edit user info
 app.put("/account/user/:id", function(req, res) {
   var currentUser = req.user.id;
-  if (currentUser == req.params.id) {
-    if (req.body.privacy) {
+  if (currentUser == req.params.id) {//verify user to allow editing user profile
+    if (req.body.privacy) {//set privacy where 1 is public and 0 is private for click box
       var privacyOption = 0;
     } else {
       var privacyOption = 1;
     }
     models.User.find(currentUser)
-    .then(function(user) {
+    .then(function(user) {//then update user attributes
       user.updateAttributes({
         first_name: req.body.firstname,
         last_name: req.body.lastname,
         username: req.body.username,
         privacy: privacyOption
       })
-      .then(function() {
+      .then(function() {//on success, redirect to same page and show changes
         res.redirect("/account/settings");
       });
     });
-  } else {
+  } else {//if malicious attempt at editing other user's profile, render 404 error
     res.render('404.ejs');
   }
 });
 
-app.post("/contact", function(req, res) {
+app.post("/contact", function(req, res) {//handle contact page to send to my email
   var message = {
     "html": req.body.comment,
     "subject": "Comments on TinyBucket",
@@ -360,7 +330,7 @@ app.post("/contact", function(req, res) {
 
       // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
   });
-})
+});
 
 
 

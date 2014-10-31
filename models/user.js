@@ -36,7 +36,8 @@ module.exports = function(sequelize, DataTypes) {
     password: DataTypes.STRING,
     privacy: DataTypes.INTEGER,
     current_task_id: DataTypes.INTEGER
-  }, {
+  }, 
+  {
     classMethods: {
       associate: function(models) {
         User.hasMany(models.Task, { through: 'UsersTasks'} );
@@ -48,7 +49,7 @@ module.exports = function(sequelize, DataTypes) {
       comparePass: function(userpass, dbpass) {
         return bcrypt.compareSync(userpass, dbpass);
       },
-      createNewUser: function(userInfo) {
+      createNewUser: function(userInfo) {//custom function to create a new user
         return User.create({
           first_name: userInfo.firstname,
           last_name: userInfo.lastname,
@@ -62,13 +63,13 @@ module.exports = function(sequelize, DataTypes) {
     },
     instanceMethods: {
       getCurrentTask: function() {
-        var models = require('./index');
-        return models.Task.find(this.current_task_id);
-      }
+        var models = require('./index');//require other models, task table
+        return models.Task.find(this.current_task_id);//find task based on users current task
     }
-  });
+  }
+});
 
-  passport.use(new localStrategy({
+  passport.use(new localStrategy({//passport local strategy
     usernameField: 'username',
     passwordField: 'password'
   }, function(username, password, passfinished) {
@@ -78,7 +79,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     }).done(function(error, user) {
       if (user) {
-        if (User.comparePass(password, user.password)) { // database, user input
+        if (User.comparePass(password, user.password)) { // database, user input //compare passwords for a match
           passfinished(null, user); //starts session
         } else { //passwords dont match
           console.log("passwords don't match"); 

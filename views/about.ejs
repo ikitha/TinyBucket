@@ -3,10 +3,10 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <% if(!isAuthenticated) { %>
+      <% if(!isAuthenticated) { %> <!-- if user is signed in -->
       <a class="navbar-brand active" href="/new">
       <% } %>
-      <% if(isAuthenticated) { %>
+      <% if(isAuthenticated) { %> <!-- if user is not logged in -->
         <a class="navbar-brand active" href="/home">
       <% } %>
       <img src="/images/A Tiny Bucket.png">
@@ -16,7 +16,7 @@
       <ul class="nav navbar-nav">
         <li><a href="/about">About</a></li>
         <li><a href="/discover">Discover</a></li>
-        <% if(isAuthenticated) { %>
+        <% if(isAuthenticated) { %><!-- if user is signed in -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Account<span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
@@ -26,7 +26,7 @@
         </li>
         <li><a href="/logout" class="navbar-nav">Logout</a></li>
         <% } %>
-        <% if(!isAuthenticated) { %>
+        <% if(!isAuthenticated) { %><!-- if user is not logged in -->
           <li><a href="/login" class="navbar-nav">Sign In</a></li>
         <% } %>
       </ul>

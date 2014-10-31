@@ -3,10 +3,10 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <% if(!isAuthenticated) { %>
+      <% if(!isAuthenticated) { %> <!-- if user is not logged in -->
       	<a class="navbar-brand active" href="/new">
       <% } %>
-      <% if(isAuthenticated) { %>
+      <% if(isAuthenticated) { %> <!-- if user is signed in -->
       	<a class="navbar-brand active" href="/home">
       <% } %>
       <img src="/images/A Tiny Bucket.png">
@@ -27,13 +27,18 @@
 		<hr />
 	</div>
 
+	<!-- display any validation errors -->
+
 	<% if (messages.length) { %>
-	    <div class="alert alert-danger margin-top-20 signup-errors" role="alert">
-	      <% messages.forEach(function(error) { %>
-	          <p><%= error.message %></p>
-	      <% }); %>
-	    </div>
-  	<% } %>
+    <div class="alert alert-danger margin-top-20 signup-errors" role="alert">
+      <% messages.forEach(function(error) { %>
+        <p><%= error.message %></p>
+      <% }); %>
+    </div>
+	<% } %>
+
+
+  	<!-- POST method to create a user -->
 
 	<form class="signup" role="form" method="post" action="/new">
 	  <div class="form-group">

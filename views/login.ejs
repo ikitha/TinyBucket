@@ -3,16 +3,15 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <% if(!isAuthenticated) { %>
+      <% if(!isAuthenticated) { %> <!-- if user is not logged in -->
         <a class="navbar-brand active" href="/new">
       <% } %>
-      <% if(isAuthenticated) { %>
+      <% if(isAuthenticated) { %> <!-- if user is signed in -->
         <a class="navbar-brand active" href="/home">
       <% } %>
-      <img src="/images/A Tiny Bucket.png">
-      TinyBucket</a>
-    </div>
-     <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+      <img src="/images/A Tiny Bucket.png">TinyBucket</a>
+  	</div>
+  <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li><a href="/about">About</a></li>
         <li><a href="/discover">Discover</a></li>
@@ -25,6 +24,8 @@
 		<h1>Welcome to TinyBucket!</h1>
 		<hr />
 	</div>
+
+	<!-- Display any login errors -->
 
 	<% if (messages.length > 0) { %>
 	    <div class="alert alert-danger margin-top-20 signup-errors" role="alert">
@@ -45,4 +46,5 @@
 	  <button type="submit" class="btn btn-lg btn-primary login">Log In</button>
 	  <div class="margin-top-20"><a href="/new" class="margin-top-20">Don't have an account? Sign up!</a></div>
 	</form>
+
 </div>

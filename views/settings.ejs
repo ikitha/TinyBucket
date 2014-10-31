@@ -3,10 +3,10 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <% if(!isAuthenticated) { %>
-      	<a class="navbar-brand active" href="/new">
+    <% if(!isAuthenticated) { %> <!-- if user is not logged in -->
+      <a class="navbar-brand active" href="/new">
 	  <% } %>
-	  <% if(isAuthenticated) { %>
+	  <% if(isAuthenticated) { %> <!-- if user is signed in -->
 	    <a class="navbar-brand active" href="/home">
 	  <% } %>
       <img src="/images/A Tiny Bucket.png">
@@ -29,44 +29,46 @@
 </nav>
 
 <div class="container main" style="margin-top:50px">
-<ol class="breadcrumb">
-  <li>Account</li>
-  <li><a href="/account/settings">Settings</a></li>
-</ol>
+	<ol class="breadcrumb">
+	  <li>Account</li>
+	  <li><a href="/account/settings">Settings</a></li>
+	</ol>
 
-<div class="container">
+	<div class="container">
 		<h1>Manage Your Account</h1>
 		<hr />
-</div>
+	</div>
 
-<div class="center set">
-	<form class="settings" role="form" method="post" action="/account/user/<%= currentUser.id %>?_method=put">
-		  <div class="form-group">
-		    <label for="firstname">First Name</label>
-		    <input type="firstname" class="form-control" name="firstname" value="<%= currentUser.first_name %>">
-		  </div>
-		  <div class="form-group">
-		    <label for="lastname">Last Name</label>
-		    <input type="lastname" class="form-control" name="lastname" value="<%= currentUser.last_name %>">
-		  </div>
-		  <!-- <div class="form-group">
-		    <label for="email">Email</label>
-		    <input type="email" class="form-control" name="email" value="<%= currentUser.email %>">
-		  </div> -->
-		  <div class="form-group">
-		    <label for="username">Username</label>
-		    <input type="username" class="form-control" name="username" value="<%= currentUser.username %>">
-		  </div>
-		  <!-- <div class="form-group">
-		    <label for="password">Password</label>
-		    <input type="password" class="form-control" id="password" value="<%= currentUser.password %>">
-		  </div> -->
-		  <div>
-			  <label for="privacy">
-	      		<input type="checkbox" name="privacy"> Make my posts private
-	    	  </label>
-    	  </div>
-		  <button type="submit" class="btn btn-lg btn-primary login changes">Submit Changes</button>
-	</form>
-</div>
+	<!-- PUT to update user table -->
+
+	<div class="center set">
+		<form class="settings" role="form" method="post" action="/account/user/<%= currentUser.id %>?_method=put">
+			  <div class="form-group">
+			    <label for="firstname">First Name</label>
+			    <input type="firstname" class="form-control" name="firstname" value="<%= currentUser.first_name %>">
+			  </div>
+			  <div class="form-group">
+			    <label for="lastname">Last Name</label>
+			    <input type="lastname" class="form-control" name="lastname" value="<%= currentUser.last_name %>">
+			  </div>
+			  <!-- <div class="form-group">
+			    <label for="email">Email</label>
+			    <input type="email" class="form-control" name="email" value="<%= currentUser.email %>">
+			  </div> -->
+			  <div class="form-group">
+			    <label for="username">Username</label>
+			    <input type="username" class="form-control" name="username" value="<%= currentUser.username %>">
+			  </div>
+			  <!-- <div class="form-group">
+			    <label for="password">Password</label>
+			    <input type="password" class="form-control" id="password" value="<%= currentUser.password %>">
+			  </div> -->
+			  <div>
+				  <label for="privacy">
+		      	<input type="checkbox" name="privacy"> Make my posts private
+		    	</label>
+	    	</div>
+			  <button type="submit" class="btn btn-lg btn-primary login changes">Submit Changes</button>
+		</form>
+	</div>
 </div>

@@ -5,22 +5,23 @@ module.exports = function(sequelize, DataTypes) {
     UserId: DataTypes.INTEGER,
     TaskId: DataTypes.INTEGER,
     post: DataTypes.STRING
-  }, {
+  }, 
+  {
     classMethods: {
       associate: function(models) {
         UserTask.hasOne(models.User, { foreignKey: "id" });
         UserTask.belongsTo(models.User);
         UserTask.belongsTo(models.Task);
       },
-      createCompletedTask: function(userInfo) {
+      createCompletedTask: function(userInfo) {//custom function to create a complete task "post"
         return UserTask.create({
           UserId: userInfo.userid,
           TaskId: userInfo.taskid,
           post: userInfo.post
         });
       }
-    }
-  });
+  }
+});
 
   return UserTask;
 };
