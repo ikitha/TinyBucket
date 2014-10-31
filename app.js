@@ -14,7 +14,7 @@ var passport = require("passport"),
     localStrategy = require("passport-local").Strategy;
 
 var mandrill = require('mandrill-api/mandrill');
-var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_API_KEY);
+var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_APIKEY);
 
 
 app.set("view engine", "ejs");
