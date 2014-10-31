@@ -8,9 +8,16 @@
 	width: 50%;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 8%;
 	font-family: 'Coustard', serif;
 	font-size: 1.5em;
+}
+.signup-errors {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5%;
+	font-family: 'Coustard', serif;
+	font-size: 1em;
 }
 .log {
 	margin-top: 15%;
@@ -147,4 +154,14 @@ h2 {
 	margin-top:5px;
 	text-align: center;
 	font-size: .8em;
+}
+.errorpage {
+  width: 900px;
+  height: 500px;
+  background-image: url(/images/404_08.jpg); 
+  background-repeat: no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }

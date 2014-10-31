@@ -13,6 +13,10 @@ var express = require('express'),
 var passport = require("passport"),
     localStrategy = require("passport-local").Strategy;
 
+var mandrill = require('mandrill-api/mandrill');
+var mandrill_client = new mandrill.Mandrill(process.env.MANDRILL_API_KEY);
+
+
 app.set("view engine", "ejs");
 
 // this is different from setting the view engine
@@ -65,20 +69,21 @@ passport.deserializeUser(function(id, done){
 
 //GET ROUTES
 app.get("/", function(req, res) {
-    res.redirect("/login", {
-      isAuthenticated: req.isAuthenticated()
-    });
+    res.redirect("/login");
 });
 
 app.get("/login", function(req, res) {
+
     res.render('login.ejs', {
-      isAuthenticated: req.isAuthenticated()
+      isAuthenticated: req.isAuthenticated(),
+      messages: req.flash('error')
     });
 });
 
 app.get("/new", function(req, res) {
     res.render('signup.ejs', {
-      isAuthenticated: req.isAuthenticated()
+      isAuthenticated: req.isAuthenticated(),
+      messages: req.flash('info')
     });
 });
 
@@ -109,6 +114,7 @@ app.get("/home", function(req, res) {
 });
 
 app.get("/about", function(req, res) {
+  var currentUser = req.user;
     res.render('about.ejs', {
         isAuthenticated: req.isAuthenticated()
     });
@@ -149,7 +155,8 @@ app.get("/account/feed", function(req, res) {
             model: models.Task,
             required: true
           } 
-        ] 
+        ],
+        order: [['updatedAt', 'DESC']]  
       }).then(function(currentUserTasks) {
         res.render('feed.ejs', {
           currentUserTasks: currentUserTasks,
@@ -177,6 +184,10 @@ app.get("/newtask", function(req, res) {
     res.render("createtask.ejs");
 });
 
+app.get("/404", function(req, res) {
+  res.render('404.ejs');
+});
+
 //POST ROUTES
 app.post("/new", function(req, res) {
   models.Task.getRandomTask()
@@ -195,8 +206,11 @@ app.post("/new", function(req, res) {
   .then(function() {
     res.redirect("/login");
   })
-  .catch(function() {
-    res.redirect("/signup");
+  .catch(function(error) {
+    res.render("signup.ejs", {
+      isAuthenticated: req.isAuthenticated(),
+      messages: error.errors
+    });
   });
 });
 
@@ -257,7 +271,8 @@ app.get("/discover/show", function(req, res) {
         model: models.User,
         required: true
       }  
-    ] 
+    ],
+    order: [['updatedAt', 'DESC']] 
   })
   .then(function(taskresults) {
     res.render('discover-id', {
@@ -278,10 +293,15 @@ app.post("/newtask", function(req, res) {
 });
 
 //post route for login handled through passport
-app.post("/login", passport.authenticate("local", {
-  successRedirect: "/home",
-  failureRedirect: "/login"
-}));
+app.post("/login", passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/login',
+    failureFlash: {
+      type: 'error',
+      message: "Your credentials were incorrect."
+    }
+  })
+);
 
 //put route to edit user info
 app.put("/account/user/:id", function(req, res) {
@@ -305,9 +325,43 @@ app.put("/account/user/:id", function(req, res) {
       });
     });
   } else {
-    //404
+    res.render('404.ejs');
   }
 });
+
+app.post("/contact", function(req, res) {
+  var message = {
+    "html": req.body.comment,
+    "subject": "Comments on TinyBucket",
+    "from_email": req.body.email,
+    "from_name": req.body.firstname + " " + req.body.lastname,
+    "to": [{
+            "email": process.env.MY_EMAIL,
+            "name": "TinyBucket",
+            "type": "to"
+        }],
+    "headers": {
+        "Reply-To": req.body.email
+    }
+  };
+  var async = true;
+  var ip_pool = "Main Pool";
+  mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool}, function(result) {
+      console.log(result);
+      /*
+      [{
+              "email": "recipient.email@example.com",
+              "status": "sent",
+              "reject_reason": "hard-bounce",
+              "_id": "abc123abc123abc123abc123abc123"
+          }]
+      */
+  }, function(e) {
+      // Mandrill returns the error as an object with name and message keys
+      console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+      // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
+  });
+})
 
 
 

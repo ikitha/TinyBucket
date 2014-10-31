@@ -8,9 +8,31 @@ var passport = require("passport"),
 
 module.exports = function(sequelize, DataTypes) {
   var User = sequelize.define("User", {
-    first_name: DataTypes.STRING,
-    last_name: DataTypes.STRING,
-    username: DataTypes.STRING,
+    first_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isAlpha: {
+          msg: 'Your first name should be at least one character.'
+        }
+      }
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      validate: {
+        isAlpha: {
+          msg: 'Your last name should be at least one character.'
+        }
+      }
+    },
+    username: {
+      type: DataTypes.STRING,
+      validate: {
+        len: {
+          args: [2,8],
+          msg: 'Your username should be between 2-8 characters.'
+        }
+      }
+    },
     password: DataTypes.STRING,
     privacy: DataTypes.INTEGER,
     current_task_id: DataTypes.INTEGER
@@ -60,11 +82,11 @@ module.exports = function(sequelize, DataTypes) {
           passfinished(null, user); //starts session
         } else { //passwords dont match
           console.log("passwords don't match"); 
-          passfinished(null, null);
+          passfinished(null, null, {message: "Your credentials were incorrect."});
         }
       } else { //no user was found
         console.log("no user was even found");
-        passfinished(null, null);
+        passfinished(null, null, {message: "Your credentials were incorrect."});
       }
     });
   }));

@@ -17,6 +17,7 @@
     "ejs": "^1.0.0",
     "ejs-locals": "^1.0.2",
     "express": "^4.10.0",
+    "mandrill-api": "^1.0.41",
     "method-override": "^2.3.0",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",

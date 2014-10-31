@@ -9,7 +9,7 @@
       <% if(isAuthenticated) { %>
       	<a class="navbar-brand active" href="/home">
       <% } %>
-      <img src='https://clker.com/cliparts/T/U/r/H/U/S/pail-bucket-md.png'>
+      <img src="/images/A Tiny Bucket.png">
       TinyBucket</a>
     </div>
      <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -27,6 +27,14 @@
 		<hr />
 	</div>
 
+	<% if (messages.length) { %>
+	    <div class="alert alert-danger margin-top-20 signup-errors" role="alert">
+	      <% messages.forEach(function(error) { %>
+	          <p><%= error.message %></p>
+	      <% }); %>
+	    </div>
+  	<% } %>
+
 	<form class="signup" role="form" method="post" action="/new">
 	  <div class="form-group">
 	    <label for="firstname">First Name</label>
@@ -36,10 +44,10 @@
 	    <label for="lastname">Last Name</label>
 	    <input type="lastname" class="form-control" name="lastname" placeholder="Last Name">
 	  </div>
-	  <div class="form-group">
+	  <!-- <div class="form-group">
 	    <label for="email">Email</label>
 	    <input type="email" class="form-control" name="email" placeholder="Email">
-	  </div>
+	  </div> -->
 	  <div class="form-group">
 	    <label for="username">Username</label>
 	    <input type="username" class="form-control" name="username" placeholder="Username">
@@ -52,4 +60,4 @@
 	  <div class="margin-top-20"><a href="/login" class="margin-top-20">Already have an account? Sign in!</a></div>
 	</form>
 
-</div
+</div>
